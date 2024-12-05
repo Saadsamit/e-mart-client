@@ -7,11 +7,12 @@ import { redirect } from "next/navigation";
 
 const axiosInstance = axios.create({
   baseURL: envConfig.serverUrl as string,
+  withCredentials: true,
 });
 
 axiosInstance.interceptors.request.use(
   (config) => {
-    const accessToken = cookies().get("accessToken")?.value;
+    const accessToken = cookies().get("token")?.value;
     if (accessToken) {
       config.headers.Authorization = accessToken;
     }
@@ -26,12 +27,12 @@ axiosInstance.interceptors.response.use(
   (res) => {
     return res;
   },
- async (error) => {
+  async (error) => {
     const config = error.config;
 
     if (error?.response?.status === 401 && !config?.sent) {
-      Promise.reject(error)
-      return redirect("/login")
+      Promise.reject(error);
+      return redirect("/login");
     } else {
       return Promise.reject(error);
     }

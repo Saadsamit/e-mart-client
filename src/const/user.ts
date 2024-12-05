@@ -1,4 +1,12 @@
 export const userRole = {
-    user: 'user',
-    admin: 'admin',
-  } as const;
+  ADMIN: "ADMIN",
+  VENDOR: "VENDOR",
+  CUSTOMER: "CUSTOMER",
+} as const;
+
+export const userStatus = {
+  none: "none",
+  request: "request",
+  suspend: "suspend",
+  delete: "delete",
+} as const;

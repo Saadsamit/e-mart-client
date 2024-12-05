@@ -4,7 +4,7 @@ import clsx from "clsx";
 
 import { siteConfig } from "@/src/config/site";
 import { fontSans } from "@/src/config/fonts";
-import { Providers } from "../utils/Provider/providers";
+import { Providers } from "@/src/utils/Provider/providers";
 import { cookies } from "next/headers";
 
 export const metadata: Metadata = {
@@ -23,7 +23,7 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const token = cookies().get("accessToken")?.value.split(' ')[1]
+  const token = cookies().get("token")?.value
   
   return (
     <html suppressHydrationWarning lang="en">

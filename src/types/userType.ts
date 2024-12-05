@@ -1,16 +1,14 @@
-import { userRole } from "../const/user";
+import { userRole, userStatus } from "@/src/const/user";
 
 export type TcurrentUser = {
-    _id: string;
-    email: string;
-    role: keyof typeof userRole,
-    picture: string;
-    name: string;
-  }
+  userId: string;
+  email: string;
+  role: keyof typeof userRole;
+};
 
 export type TUser = {
-  verified: boolean;
-  posts: number;
-  followers: string[];
+  name: string;
+  picture: string;
+  status: keyof typeof userStatus;
   following: string[];
 } & TcurrentUser;

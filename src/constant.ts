@@ -1,3 +1,3 @@
-// import { config } from "./middleware";
+import { config } from "./middleware";
 
-// export const privateRoute = config.matcher;
+export const privateRoute = config.matcher;

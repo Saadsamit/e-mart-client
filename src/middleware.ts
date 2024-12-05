@@ -1,68 +1,60 @@
-// import { NextResponse } from "next/server";
-// import { NextRequest } from "next/server";
-// import { getCurrentUser } from "./services/authService/authApi";
+import { NextResponse } from "next/server";
+import { NextRequest } from "next/server";
+import { getCurrentUser } from "./services/authService/authApi";
+import { userRole } from "./const/user";
 
-// const AuthRoutes = ["/login", "/signup"];
+const AuthRoutes = ["/login", "/signup"];
 
-// type Role = keyof typeof roleBasedRoutes;
+type Roles = keyof typeof userRole;
 
-// const commonRoutes = ["/news-feed", "/profile", "/dashboard"];
+const commonRoutes = ["/dashboard"];
 
-// const roleBasedRoutes = {
-//   admin: [
-//     ...commonRoutes,
-//     "/dashboard/manage-users",
-//     "/dashboard/manage-posts",
-//     "/dashboard/payments",
-//   ],
-//   user: [
-//     ...commonRoutes,
-//     "/dashboard/posts",
-//     "/dashboard/followers",
-//     "/dashboard/following",
-//   ],
-// };
+const roleBasedRoutes = {
+  ADMIN: [
+    ...commonRoutes,
+    "/dashboard/manage-users",
+  ],
+  VENDOR: [
+    ...commonRoutes,
+    "/dashboard/posts",
+  ],
+  CUSTOMER: [
+    ...commonRoutes,
+    "/dashboard/posts",
+  ],
+};
 
-// export async function middleware(request: NextRequest) {
-//   const { pathname } = request.nextUrl;
+export async function middleware(request: NextRequest) {
+  const { pathname } = request.nextUrl;
 
-//   const user = await getCurrentUser();
+  const user = await getCurrentUser();
+  
+  if (!user) {
+    if (AuthRoutes.includes(pathname)) {
+      return NextResponse.next();
+    } else {
+      return NextResponse.redirect(
+        new URL(`/login?redirect=${pathname}`, request.url)
+      );
+    }
+  }
 
-//   if (!user) {
-//     if (AuthRoutes.includes(pathname)) {
-//       return NextResponse.next();
-//     } else {
-//       return NextResponse.redirect(
-//         new URL(`/login?redirect=${pathname}`, request.url)
-//       );
-//     }
-//   }
+  if (user?.role && roleBasedRoutes[user?.role as Roles]) {
+    const routes = roleBasedRoutes[user?.role as Roles];
 
-//   if (user?.role && roleBasedRoutes[user?.role as Role]) {
-//     const routes = roleBasedRoutes[user?.role as Role];
+    if (routes.some((route) => pathname.match(route))) {
+      return NextResponse.next();
+    }
+  }
 
-//     if (routes.some((route) => pathname.match(route))) {
-//       return NextResponse.next();
-//     }
-//   }
-
-//   return NextResponse.redirect(new URL("/", request.url));
-// }
-
-// export const config = {
-//   matcher: [
-//     "/dashboard",
-//     "/profile",
-//     "/news-feed/:page*",
-//     "/news-feed",
-//     "/dashboard/:page*",
-//     "/login",
-//     "/signup",
-//   ],
-// };
+  return NextResponse.redirect(new URL("/", request.url));
+}
 
 export const config = {
-      matcher: [
-        "/abc"
-      ],
-    };
+  matcher: [
+    "/dashboard",
+    "/dashboard/:page*",
+    "/login",
+    "/signup",
+  ],
+};

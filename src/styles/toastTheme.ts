@@ -1,8 +1,8 @@
 const toastTheme = {
     style: {
-      border: "1px solid #38bdf8",
+      border: "1px solid #ea580c",
       padding: "16px",
-      color: "#38bdf8",
+      color: "#ea580c",
     },
   };
 
