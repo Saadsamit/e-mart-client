@@ -84,9 +84,7 @@ const Navbar = () => {
                 <Avatar
                   isBordered
                   as="button"
-                  name={user?.name}
                   size="sm"
-                  src={user?.picture}
                 />
               </DropdownTrigger>
               <DropdownMenu aria-label="Profile Actions" variant="flat">

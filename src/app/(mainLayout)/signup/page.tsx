@@ -6,26 +6,26 @@ import { HiMiniXMark } from "react-icons/hi2";
 import Image from "next/image";
 import { FieldValues, FormProvider, useForm } from "react-hook-form";
 import Button from "@/src/components/UI/Button";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect } from "react";
 import MyInput from "@/src/components/UI/MyInput";
-import { LogInScheme } from "@/src/Schemas/AuthSchemas";
+import { signupSchema } from "@/src/Schemas/AuthSchemas";
 import authService from "@/src/services/authService/authService";
 
 const page = () => {
   const router = useRouter();
-  const searchParams = useSearchParams();
-  const redirect = searchParams.get("redirect");
   const {
-    mutate: loginMutate,
+    mutate: signUpMutate,
     isPending,
     isSuccess,
     data,
-  } = authService.login();
+  } = authService.signUp();
   const methods = useForm({
-    resolver: zodResolver(LogInScheme),
+    resolver: zodResolver(signupSchema),
     defaultValues: {
+      name: "Admit",
+      picture: "https://example.com/admin.jpg",
       email: "admin@gmail.com",
       password: "si2002",
     },
@@ -34,16 +34,12 @@ const page = () => {
 
   useEffect(() => {
     if (data?.success) {
-      if (redirect) {
-        router.push(redirect);
-      } else {
-        router.push("/");
-      }
+      router.push("/login");
     }
   }, [isPending, isSuccess]);
 
   const onSubmit = async (formData: FieldValues) => {
-    await loginMutate(formData);
+    await signUpMutate(formData);
   };
 
   return (
@@ -56,7 +52,7 @@ const page = () => {
             </button>
           </Link>
         </div>
-        <div className="flex items-center h-full">
+        <div className="flex flex-row-reverse items-center h-full">
           <div className="w-1/2 hidden lg:block">
             <Image
               src={img}
@@ -68,22 +64,24 @@ const page = () => {
           </div>
           <div className="w-full lg:w-1/2 p-4">
             <h3 className="text-2xl font-bold text-orange-600 text-center mb-10">
-              Login
+              Sign Up
             </h3>
             <FormProvider {...methods}>
               <form onSubmit={handleSubmit(onSubmit)}>
+                <MyInput label="picture" type="text" />
+                <MyInput label="name" type="text" />
                 <MyInput label="email" type="email" />
                 <MyInput label="password" type="password" />
                 <Button loading={isPending} type="submit" className="w-full">
-                  Login
+                  Sign Up
                 </Button>
                 <p className="pt-2">
-                  If You Don't Have Account{" "}
+                  If You Have A Account{" "}
                   <Link
-                    href={"/signup"}
+                    href={"/login"}
                     className="font-bold text-orange-600 hover:underline"
                   >
-                    Sign Up
+                    Login
                   </Link>
                 </p>
               </form>

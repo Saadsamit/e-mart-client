@@ -6,6 +6,11 @@ import { jwtDecode } from "jwt-decode";
 import { cookies } from "next/headers";
 import { FieldValues } from "react-hook-form";
 
+export const signUpApi = async (payload: FieldValues) => {
+  const { data } = await axiosInstance.post(`/auth/signup`, payload);
+  return data;
+};
+
 export const loginApi = async (payload: FieldValues) => {
   const { data } = await axiosInstance.post(`/auth/login`, payload);
   if (data?.token) {
